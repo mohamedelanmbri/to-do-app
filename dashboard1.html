@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do App Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar-custom {
+            background-color: white; 
+        }
+        .navbar-custom a.navbar-brand {
+            color: red; 
+            font-weight: bold;
+        }
+        .navbar-custom a#nav-dashboard {
+            color: black; 
+        }
+        .navbar-custom .btn {
+            background-color: red; 
+            color: white;
+        }
+        .navbar-custom .btn:hover {
+            background-color: darkred; 
+        }
+
+        .sidebar {
+            height: 100vh;
+            background-color: #f7f6f4; 
+            padding: 1.5rem;
+        }
+        .sidebar h4 {
+            margin-top: 2rem;
+            color: red; 
+        }
+        .task-card {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .task-card.completed {
+            background-color: #ffbf47; 
+            color: white;
+        }
+        .task-card.active {
+            background-color: #f8f9fa; 
+            color: black;
+            border: 1px solid #dee2e6;
+        }
+        .card-header-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .stats-card {
+            border-radius: 10px;
+            padding: 20px;
+            color: white;
+        }
+        .stats-card.completed {
+            background-color: #ff6f47; 
+        }
+        .stats-card.active {
+            background-color: #ffbf47; 
+        }
+        .hidden {
+            display: none;
+        }
+        .delete-all {
+            margin-left: 10px;
+        }
+        input[type="checkbox"]:checked {
+            background-color: red; 
+            border-color: red;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">To-Do App</a>
+            <a class="nav-link" href="#" id="nav-dashboard">Dashboard</a>
+            <div class="d-flex ms-auto">
+                <a class="btn ms-2" href="signup.html">Sign Out <i class="fa-solid fa-arrow-right-from-bracket"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 sidebar">
+                <button class="btn btn-outline-danger w-100 mb-4" data-bs-toggle="modal" data-bs-target="#addTaskModal">Add Task +</button>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active text-dark" href="#" id="show-dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="#" id="show-active">Active</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="#" id="show-completed">Completed</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-md-10 p-4">
+                <h1>Hello, Beautiful Human!</h1>
+                <p>What do you want to do today?</p>
+
+                <p>Today's Tasks <button class="btn btn-danger delete-all">Delete All</button></p>
+                <div class="row mb-3">
+                    <div class="col-md-8" id="task-list">
+                        
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="stats-card active mb-3">
+                            <h2><i class="fa-solid fa-clock"></i></h2>
+                            <h5>60%</h5>
+                            <p>Active tasks</p>
+                        </div>
+                        <div class="stats-card completed">
+                            <h2><i class="fa-solid fa-circle-check"></i></h2>
+                            <h5>40%</h5>
+                            <p>Completed tasks</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTaskModalLabel">Add Task</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="task-title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="task-title" placeholder="Add title">
+                    </div>
+                    <div class="mb-3">
+                        <label for="task-desc" class="form-label">Description</label>
+                        <textarea class="form-control" id="task-desc" rows="3" placeholder="Add description"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.getElementById('show-dashboard').addEventListener('click', function () {
+            const tasks = document.querySelectorAll('.task-card');
+            tasks.forEach(task => {
+                task.classList.remove('hidden');
+            });
+        });
+
+        document.getElementById('show-active').addEventListener('click', function () {
+            const tasks = document.querySelectorAll('.task-card');
+            tasks.forEach(task => {
+                if (task.getAttribute('data-status') === 'completed') {
+                    task.classList.add('hidden');
+                } else {
+                    task.classList.remove('hidden');
+                }
+            });
+        });
+
+        document.getElementById('show-completed').addEventListener('click', function () {
+            const tasks = document.querySelectorAll('.task-card');
+            tasks.forEach(task => {
+                if (task.getAttribute('data-status') === 'active') {
+                    task.classList.add('hidden');
+                } else {
+                    task.classList.remove('hidden');
+                }
+            });
+        });
+
+        document.querySelectorAll('.checkbox-task').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const taskCard = this.closest('.task-card');
+                const isChecked = this.checked;
+
+                if (isChecked) {
+                    taskCard.setAttribute('data-status', 'completed');
+                    taskCard.classList.add('completed');
+                    taskCard.classList.remove('active');
+                } else {
+                    taskCard.setAttribute('data-status', 'active');
+                    taskCard.classList.add('active');
+                    taskCard.classList.remove('completed');
+                }
+
+                const activeTab = document.querySelector('.nav-link.active').id;
+                if (activeTab === 'show-active') {
+                    taskCard.classList.toggle('hidden', isChecked);
+                } else if (activeTab === 'show-completed') {
+                    taskCard.classList.toggle('hidden', !isChecked);
+                }
+            });
+        });
+    document.addEventListener("DOMContentLoaded", function () {
+        const taskList = document.getElementById("task-list");
+        const addTaskBtn = document.querySelector(".btn-warning");
+        const deleteAllBtn = document.querySelector(".delete-all");
+        const activePercentage = document.querySelector(".stats-card.active h5");
+        const completedPercentage = document.querySelector(".stats-card.completed h5");
+
+        function updateStats() {
+            const tasks = document.querySelectorAll(".task-card");
+            const totalTasks = tasks.length;
+            const completedTasks = document.querySelectorAll(".task-card[data-status='completed']").length;
+            const activeTasks = totalTasks - completedTasks;
+
+            const activePercent = totalTasks > 0 ? Math.round((activeTasks / totalTasks) * 100) : 0;
+            const completedPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+            activePercentage.textContent = `${activePercent}%`;
+            completedPercentage.textContent = `${completedPercent}%`;
+        }
+
+        function loadTasks() {
+            const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            taskList.innerHTML = "";
+
+            tasks.forEach(task => createTaskElement(task.text, task.status));
+
+            updateStats(); // Update stats on load
+        }
+
+        function saveTasks() {
+            const tasks = [];
+            document.querySelectorAll(".task-card").forEach(taskCard => {
+                const text = taskCard.querySelector("span").textContent.trim();
+                const status = taskCard.getAttribute("data-status");
+                tasks.push({ text, status });
+            });
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            updateStats(); // Update stats when tasks change
+        }
+
+        function addCheckboxListener(checkbox, taskCard) {
+            checkbox.addEventListener("change", function () {
+                const isChecked = this.checked;
+                taskCard.setAttribute("data-status", isChecked ? "completed" : "active");
+
+                taskCard.classList.toggle("completed", isChecked);
+                taskCard.classList.toggle("active", !isChecked);
+
+                saveTasks();
+            });
+        }
+
+        function createTaskElement(taskText, status = "active") {
+            const taskCard = document.createElement("div");
+            taskCard.classList.add("task-card", status);
+            taskCard.setAttribute("data-status", status);
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.classList.add("form-check-input", "me-2", "checkbox-task");
+            checkbox.checked = status === "completed";
+
+            const taskSpan = document.createElement("span");
+            taskSpan.textContent = taskText;
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.innerHTML = '<i class="fa-solid fa-trash"></i>';
+            deleteBtn.classList.add("btn", "btn-danger", "btn-sm", "ms-2");
+            deleteBtn.addEventListener("click", function () {
+                taskCard.remove();
+                saveTasks();
+            });
+
+            taskCard.appendChild(checkbox);
+            taskCard.appendChild(taskSpan);
+            taskCard.appendChild(deleteBtn);
+            taskList.appendChild(taskCard);
+
+            addCheckboxListener(checkbox, taskCard);
+            updateStats();
+        }
+
+        addTaskBtn.addEventListener("click", function () {
+            const taskTitle = document.getElementById("task-title").value.trim();
+            if (taskTitle === "") {
+                alert("Task title cannot be empty!");
+                return;
+            }
+            createTaskElement(taskTitle);
+            saveTasks();
+
+            document.getElementById("task-title").value = "";
+            document.getElementById("task-desc").value = "";
+        });
+
+        deleteAllBtn.addEventListener("click", function () {
+            if (confirm("Are you sure you want to delete all tasks?")) {
+                localStorage.removeItem("tasks");
+                taskList.innerHTML = "";
+                updateStats(); // Reset stats after deletion
+            }
+        });
+
+        loadTasks();
+    });
+
+    </script>
+</body>
+</html>
